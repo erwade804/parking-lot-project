@@ -14,9 +14,9 @@ export class MemberService {
     return await this.memberRepository.find();
   }
 
-  async getMemberByName(member_name: string): Promise<Member> {
+  async getMemberByPlate(plate_number: string): Promise<Member> {
     return await this.memberRepository.findOne({
-      where: { name: member_name },
+      where: { license_plate: plate_number },
     });
   }
 

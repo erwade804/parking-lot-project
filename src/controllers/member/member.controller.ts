@@ -12,14 +12,13 @@ export class MemberController {
     return await this.memberService.getAllMembers();
   }
 
-  @Get('/name=:name')
-  async getByName(@Param('name') name: string): Promise<Member> {
-    return await this.memberService.getMemberByName(name);
+  @Get('/id')
+  async getById(@Body() body: { id: number }): Promise<Member> {
+    return await this.memberService.getMemberById(body.id);
   }
-
-  @Get('/id=:id')
-  async getById(@Param('id') id: number): Promise<Member> {
-    return await this.memberService.getMemberById(id);
+  @Get('/plate')
+  async getByPlate(@Body() body: { plate: string }): Promise<Member> {
+    return await this.memberService.getMemberByPlate(body.plate);
   }
 
   @Post('/create')

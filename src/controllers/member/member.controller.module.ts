@@ -7,4 +7,4 @@ import { MemberController } from './member.controller';
   controllers: [MemberController],
   providers: [],
 })
-export class AppControllerModule {}
+export class MemberControllerModule {}
