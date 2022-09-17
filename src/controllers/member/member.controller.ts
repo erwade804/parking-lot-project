@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { MemberByPlateDto, MemberByIdDto } from './../../dto/member';
+import { Body, Controller, Get, Post, Delete } from '@nestjs/common';
 import { Member } from '../../entities/member/member.entity';
 import { MemberCreationDto } from '../../dto/member';
 import { MemberService } from '../../services/member/member.service';
@@ -13,12 +14,16 @@ export class MemberController {
   }
 
   @Get('/id')
-  async getById(@Body() body: { id: number }): Promise<Member> {
+  async getById(@Body() body: MemberByIdDto): Promise<Member> {
     return await this.memberService.getMemberById(body.id);
   }
   @Get('/plate')
-  async getByPlate(@Body() body: { plate: string }): Promise<Member> {
-    return await this.memberService.getMemberByPlate(body.plate);
+  async getByPlate(@Body() body: MemberByPlateDto): Promise<Member> {
+    return await this.memberService.getMemberByPlate(body.plateNumber);
+  }
+  @Delete('/all')
+  async deleteAll(): Promise<void> {
+    await this.memberService.deleteAllMembers();
   }
 
   @Post('/create')
