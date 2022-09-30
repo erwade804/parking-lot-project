@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppControllerModule } from './member/member.controller.module';
+import { MemberControllerModule } from './member/member.controller.module';
+import { SeedControllerModule } from './seed/seed.controller.module';
 
 @Module({
-  imports: [AppControllerModule],
+  imports: [MemberControllerModule, SeedControllerModule],
 })
 export class ControllersModule {}

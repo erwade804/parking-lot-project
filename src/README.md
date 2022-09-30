@@ -1,15 +1,15 @@
 
 
-run to install npm (needed)
+run in terminal to install npm (needed)
 
     npm install
 
-to run tests
+run in terminal to run tests
 
     npm run test:watch
     This is here, just in case we do write tests.
 
-to run
+run in terminal to run
 
     npm run dev
 

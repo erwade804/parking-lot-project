@@ -1,25 +1,36 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { AuthenticationTokenService } from './../../services/authentication/authentication.service';
+import { MemberByPlateDto, MemberByIdDto } from './../../dto/member';
+import { Body, Controller, Get, Post, Delete } from '@nestjs/common';
 import { Member } from '../../entities/member/member.entity';
 import { MemberCreationDto } from '../../dto/member';
 import { MemberService } from '../../services/member/member.service';
 
 @Controller('/member')
 export class MemberController {
-  constructor(private readonly memberService: MemberService) {}
+  constructor(
+    private readonly memberService: MemberService,
+    private readonly authenticationTokenService: AuthenticationTokenService,
+  ) {}
 
   @Get('/all')
   async getAllMembers(): Promise<Member[]> {
+    const member = (await this.memberService.getAllMembers()).at(0);
+    console.log((await this.memberService.getAllMembers()).at(0));
+    this.authenticationTokenService.createAuthenticationToken(member);
     return await this.memberService.getAllMembers();
   }
 
-  @Get('/name=:name')
-  async getByName(@Param('name') name: string): Promise<Member> {
-    return await this.memberService.getMemberByName(name);
+  @Get('/id')
+  async getById(@Body() body: MemberByIdDto): Promise<Member> {
+    return await this.memberService.getMemberById(body.id);
   }
-
-  @Get('/id=:id')
-  async getById(@Param('id') id: number): Promise<Member> {
-    return await this.memberService.getMemberById(id);
+  @Get('/plate')
+  async getByPlate(@Body() body: MemberByPlateDto): Promise<Member> {
+    return await this.memberService.getMemberByPlate(body.plateNumber);
+  }
+  @Delete('/all')
+  async deleteAll(): Promise<void> {
+    await this.memberService.deleteAllMembers();
   }
 
   @Post('/create')

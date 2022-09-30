@@ -7,3 +7,13 @@ export class MemberCreationDto {
   @ApiProperty()
   plateNumber: string;
 }
+
+export class MemberByPlateDto {
+  @ApiProperty()
+  plateNumber: string;
+}
+
+export class MemberByIdDto {
+  @ApiProperty()
+  id: number;
+}

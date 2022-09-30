@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { MemberService } from '../../services/member/member.service';
-import { RandomService } from '../../services/random/random.service';
+// import { RandomService } from '../../services/random/random.service';
 
 @Injectable()
 export class TestCron {
   constructor(
     //   @InjectRepository(Member)
-    //   private readonly memberRepository: Repository<Member>, // private readonly appService: AppService,
-    private readonly memberService: MemberService,
-    private readonly randomService: RandomService,
+    //   private readonly memberRepository: Repository<Member>,
+    private readonly memberService: MemberService, // private readonly randomService: RandomService,
   ) {}
 
   @Cron(CronExpression.EVERY_5_SECONDS)
