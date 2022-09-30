@@ -1,3 +1,4 @@
+import { AuthenticationTokenService } from './../../services/authentication/authentication.service';
 import { MemberByPlateDto, MemberByIdDto } from './../../dto/member';
 import { Body, Controller, Get, Post, Delete } from '@nestjs/common';
 import { Member } from '../../entities/member/member.entity';
@@ -6,10 +7,16 @@ import { MemberService } from '../../services/member/member.service';
 
 @Controller('/member')
 export class MemberController {
-  constructor(private readonly memberService: MemberService) {}
+  constructor(
+    private readonly memberService: MemberService,
+    private readonly authenticationTokenService: AuthenticationTokenService,
+  ) {}
 
   @Get('/all')
   async getAllMembers(): Promise<Member[]> {
+    const member = (await this.memberService.getAllMembers()).at(0);
+    console.log((await this.memberService.getAllMembers()).at(0));
+    this.authenticationTokenService.createAuthenticationToken(member);
     return await this.memberService.getAllMembers();
   }
 

@@ -1,4 +1,3 @@
-import { actions } from '../../constants/logaction';
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import dateColumnTransformer from '../../helpers/dateColumnTransformer';
 
@@ -7,8 +6,8 @@ export class Log extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('enum')
-  action: actions;
+  @Column()
+  action: string;
 
   @Column({ type: 'int', transformer: dateColumnTransformer })
   time: number;

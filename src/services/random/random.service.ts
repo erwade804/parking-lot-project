@@ -3,13 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { randomInt } from 'crypto';
 import { Member } from '../../entities/member/member.entity';
 import { Repository } from 'typeorm';
-import { legalPlateLetters } from '../../constants/random';
+import {
+  legalPlateLetters,
+  legalTokenCharacters,
+} from '../../constants/random';
 
 @Injectable()
 export class RandomService {
   constructor(
     @InjectRepository(Member)
-    private readonly memberRepository: Repository<Member>,
+    private readonly memberRepository: Repository<Member>, // @InjectRepository() // private readonly loginRepository: Repository<LoginTokens>,
   ) {}
   async randomPlate(): Promise<string> {
     let plateNumber = '';
@@ -32,4 +35,24 @@ export class RandomService {
     }
     return plateNumber.charAt(0) !== ' ' && plateNumber.charAt(0) !== ' ';
   }
+
+  async randomToken(): Promise<string> {
+    let string = '';
+    for (let i = 0; i < 30; i++) {
+      string += legalTokenCharacters.charAt(
+        randomInt(0, legalTokenCharacters.length),
+      );
+    }
+    return string;
+    // return this.checkCompliantToken(string) ? string : this.randomToken();
+  }
+
+  // async checkCompliantToken(token: string): Promise<boolean> {
+  //   // check if token exists already, if it does, return false
+  //   return (
+  //     (await this.loginRepository.findOne({
+  //       where: { authenitcationToken: token },
+  //     })) !== undefined
+  //   );
+  // }
 }

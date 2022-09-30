@@ -14,7 +14,7 @@ export class MemberService {
   }
 
   async getAllMembers(): Promise<Member[]> {
-    return await this.memberRepository.find();
+    return await this.memberRepository.find({ where: {} });
   }
 
   async getMemberByPlate(plate_number: string): Promise<Member> {
