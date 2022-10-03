@@ -13,5 +13,4 @@ export class Login extends BaseEntity {
 
   @Column()
   authtoken: string;
-
 }
