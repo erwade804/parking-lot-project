@@ -2,10 +2,28 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class MemberCreationDto {
   @ApiProperty()
-  name: string;
+  first_name: string;
 
   @ApiProperty()
-  plateNumber: string;
+  last_name: string;
+
+  @ApiProperty()
+  license_plate: string;
+
+  @ApiProperty()
+  VIN: string;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  phone_number: string;
+
+  @ApiProperty()
+  username: string;
+
+  @ApiProperty()
+  password: string;
 }
 
 export class MemberByPlateDto {

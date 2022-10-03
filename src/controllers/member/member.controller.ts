@@ -34,6 +34,6 @@ export class MemberController {
 
   @Post('/create')
   async postCreateMember(@Body() body: MemberCreationDto): Promise<Member> {
-    return await this.memberService.createMember(body.name, body.plateNumber);
+    return await this.memberService.createMember(body);
   }
 }
