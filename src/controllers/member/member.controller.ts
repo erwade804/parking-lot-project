@@ -14,9 +14,6 @@ export class MemberController {
 
   @Get('/all')
   async getAllMembers(): Promise<Member[]> {
-    const member = (await this.memberService.getAllMembers()).at(0);
-    console.log((await this.memberService.getAllMembers()).at(0));
-    this.authenticationTokenService.createAuthenticationToken(member);
     return await this.memberService.getAllMembers();
   }
 
@@ -24,10 +21,12 @@ export class MemberController {
   async getById(@Body() body: MemberByIdDto): Promise<Member> {
     return await this.memberService.getMemberById(body.id);
   }
+
   @Get('/plate')
   async getByPlate(@Body() body: MemberByPlateDto): Promise<Member> {
     return await this.memberService.getMemberByPlate(body.plateNumber);
   }
+
   @Delete('/all')
   async deleteAll(): Promise<void> {
     await this.memberService.deleteAllMembers();

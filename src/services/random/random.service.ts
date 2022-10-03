@@ -28,7 +28,7 @@ export class RandomService {
 
   async compliantPlate(plateNumber: string): Promise<boolean> {
     const exists = await this.memberRepository.findAndCount({
-      where: { license_plate: plateNumber },
+      where: { license_number: plateNumber },
     });
     if (exists[1] === 1) {
       return false;
