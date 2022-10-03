@@ -53,7 +53,6 @@ export class MemberService {
     console.log(`Created member for ${member.first_name}`);
     // create login entity through login service
     // this is temperary for now
-    console.log(member.id);
     const login = this.loginRepository.create();
     login.password = body.password;
     login.username = body.username;
