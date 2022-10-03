@@ -1,4 +1,4 @@
-import dateColumnTransformer from 'src/helpers/dateColumnTransformer';
+import dateColumnTransformer from '../../helpers/dateColumnTransformer';
 import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

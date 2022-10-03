@@ -10,6 +10,6 @@ export const AppDataSource = new DataSource({
   database: 'sql5520452',
   synchronize: true,
   // uncomment to see sql queries
-  logging: true,
+  // logging: true,
   entities: entities,
 });
