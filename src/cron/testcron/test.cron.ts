@@ -12,7 +12,7 @@ export class TestCron {
     private readonly randomService: RandomService,
   ) {}
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  @Cron(CronExpression.EVERY_MINUTE)
   async logMemberAmount() {
     const number = (await this.memberService.getAllMembers()).length;
     console.log(`There are ${number} members`);
