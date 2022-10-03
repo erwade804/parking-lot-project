@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Member extends BaseEntity {
@@ -6,8 +6,23 @@ export class Member extends BaseEntity {
   id: number;
 
   @Column()
-  name: string;
+  first_name: string;
 
   @Column()
-  license_plate: string;
+  last_name: string;
+
+  @Column()
+  license_number: string;
+
+  @Column()
+  VIN: string;
+
+  @Column()
+  card_id: number;
+
+  @Column()
+  email: string;
+
+  @Column()
+  phone_number: string;
 }

@@ -16,38 +16,38 @@ export class SeedService {
   async seedMemberDataBase(): Promise<void> {
     if (!this.seeded) {
       let member = this.memberRepository.create();
-      member.name = 'Jerald';
-      member.license_plate = await this.randomService.randomPlate();
+      member.first_name = 'Jerald';
+      member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.name = 'Karen';
-      member.license_plate = await this.randomService.randomPlate();
+      member.first_name = 'Karen';
+      member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.name = 'Zach';
-      member.license_plate = await this.randomService.randomPlate();
+      member.first_name = 'Zach';
+      member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.name = 'Paul';
-      member.license_plate = await this.randomService.randomPlate();
+      member.first_name = 'Paul';
+      member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.name = 'Lambert';
-      member.license_plate = await this.randomService.randomPlate();
+      member.first_name = 'Lambert';
+      member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.name = 'Alice';
-      member.license_plate = await this.randomService.randomPlate();
+      member.first_name = 'Alice';
+      member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.name = 'Frank';
-      member.license_plate = await this.randomService.randomPlate();
+      member.first_name = 'Frank';
+      member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       this.seeded = true;

@@ -19,7 +19,7 @@ export class MemberService {
 
   async getMemberByPlate(plate_number: string): Promise<Member> {
     return await this.memberRepository.findOne({
-      where: { license_plate: plate_number },
+      where: { license_number: plate_number },
     });
   }
 
@@ -42,10 +42,10 @@ export class MemberService {
   ): Promise<Member> {
     console.log('here');
     const member = this.memberRepository.create();
-    member.license_plate = license_plate;
-    member.name = memberName;
+    member.license_number = license_plate;
+    member.first_name = memberName;
     await member.save();
-    console.log(`Created member for ${member.name}`);
+    console.log(`Created member for ${member.first_name}`);
     return member;
   }
 }
