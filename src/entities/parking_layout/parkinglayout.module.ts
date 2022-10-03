@@ -6,4 +6,4 @@ import { ParkingLayout } from './parkinglayout.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([ParkingLayout])],
 })
-export class LoginModule {}
+export class ParkingLayoutModule {}

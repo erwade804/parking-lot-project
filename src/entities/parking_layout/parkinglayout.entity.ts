@@ -1,18 +1,18 @@
-import moment from 'moment';
-import { Entity, Column, BaseEntity, PrimaryColumn } from 'typeorm';
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class ParkingLayout extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   parking_id: number;
-
-  @Column()
-  type: string;
 
   @Column()
   level: number;
 
   @Column()
   slot: number;
+
+  @Column()
+  type: string;
+
 
 }
