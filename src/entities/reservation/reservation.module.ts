@@ -6,4 +6,12 @@ import { Reservation } from './reservation.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Reservation])],
 })
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export class ReservationModule {}
+=======
+export class ReservationModule {}
+>>>>>>> Stashed changes
+=======
+export class ReservationModule {}
+>>>>>>> Stashed changes
