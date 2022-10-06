@@ -44,13 +44,11 @@ export class MemberService {
   async createMember(body: MemberCreationDto): Promise<Member> {
     const member = this.memberRepository.create();
     member.license_number = body.license_plate;
-    member.first_name = body.first_name;
-    member.last_name = body.last_name;
-    member.VIN = body.VIN;
+    member.name = body.first_name;
     member.email = body.email;
     member.phone_number = body.phone_number;
     await member.save();
-    console.log(`Created member for ${member.first_name}`);
+    console.log(`Created member for ${member.name}`);
     // create login entity through login service
     // this is temperary for now
     const login = this.loginRepository.create();

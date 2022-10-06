@@ -1,5 +1,5 @@
 import dateColumnTransformer from '../../helpers/dateColumnTransformer';
-import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 @Entity()
 export class Reservation extends BaseEntity {

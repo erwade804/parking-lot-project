@@ -6,16 +6,10 @@ export class Member extends BaseEntity {
   id: number;
 
   @Column()
-  first_name: string;
-
-  @Column()
-  last_name: string;
+  name: string;
 
   @Column()
   license_number: string;
-
-  @Column()
-  VIN: string;
 
   @Column()
   card_id: number;
