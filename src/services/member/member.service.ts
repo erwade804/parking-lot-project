@@ -44,7 +44,7 @@ export class MemberService {
   async createMember(body: MemberCreationDto): Promise<Member> {
     const member = this.memberRepository.create();
     member.license_number = body.license_plate;
-    member.name = body.first_name;
+    member.name = body.name;
     member.email = body.email;
     member.phone_number = body.phone_number;
     await member.save();
