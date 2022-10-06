@@ -16,37 +16,37 @@ export class SeedService {
   async seedMemberDataBase(): Promise<void> {
     if (!this.seeded) {
       let member = this.memberRepository.create();
-      member.first_name = 'Jerald';
+      member.name = 'Jerald';
       member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.first_name = 'Karen';
+      member.name = 'Karen';
       member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.first_name = 'Zach';
+      member.name = 'Zach';
       member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.first_name = 'Paul';
+      member.name = 'Paul';
       member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.first_name = 'Lambert';
+      member.name = 'Lambert';
       member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.first_name = 'Alice';
+      member.name = 'Alice';
       member.license_number = await this.randomService.randomPlate();
       await member.save();
 
       member = this.memberRepository.create();
-      member.first_name = 'Frank';
+      member.name = 'Frank';
       member.license_number = await this.randomService.randomPlate();
       await member.save();
 
