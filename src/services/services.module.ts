@@ -1,3 +1,4 @@
+import { LoginServiceModule } from './login/login.service.module';
 import { SeedServiceModule } from './seed/seed.service.module';
 import { Module } from '@nestjs/common';
 import { MemberServiceModule } from './member/member.service.module';
@@ -10,6 +11,7 @@ import { AuthenticationTokenServiceModule } from './authentication/authenticatio
     RandomServiceModule,
     SeedServiceModule,
     AuthenticationTokenServiceModule,
+    LoginServiceModule,
   ],
 })
 export class ServicesModule {}

@@ -10,14 +10,14 @@ export class Reservation extends BaseEntity {
   id: number;
 
   @Column({ type: 'int', transformer: dateColumnTransformer })
-  start_time: number;
+  start_time: moment.Moment;
 
   @Column({ type: 'int', transformer: dateColumnTransformer })
-  end_time: number;
+  end_time: moment.Moment;
 
   @Column({ type: 'int', transformer: dateColumnTransformer })
-  entry_time: number;
+  entry_time: moment.Moment;
 
   @Column({ type: 'int', transformer: dateColumnTransformer })
-  exit_time: number;
+  exit_time: moment.Moment;
 }

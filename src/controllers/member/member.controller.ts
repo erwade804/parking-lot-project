@@ -1,9 +1,11 @@
 import { AuthenticationTokenService } from './../../services/authentication/authentication.service';
 import { MemberByPlateDto, MemberByIdDto } from './../../dto/member';
-import { Body, Controller, Get, Post, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Post, Delete, Req } from '@nestjs/common';
 import { Member } from '../../entities/member/member.entity';
 import { MemberCreationDto } from '../../dto/member';
 import { MemberService } from '../../services/member/member.service';
+import { Request } from 'express';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('/member')
 export class MemberController {
@@ -13,8 +15,12 @@ export class MemberController {
   ) {}
 
   @Get('/all')
-  async getAllMembers(): Promise<Member[]> {
-    return await this.memberService.getAllMembers();
+  @ApiBearerAuth()
+  async getAllMembers(@Req() request: Request): Promise<Member[]> {
+    const member = await this.authenticationTokenService.getMemberFromAuthToken(
+      request.headers.authorization,
+    );
+    if (member) return await this.memberService.getAllMembers();
   }
 
   @Get('/id')
@@ -27,13 +33,14 @@ export class MemberController {
     return await this.memberService.getMemberByPlate(body.plateNumber);
   }
 
-  @Delete('/all')
-  async deleteAll(): Promise<void> {
-    await this.memberService.deleteAllMembers();
-  }
-
   @Post('/create')
   async postCreateMember(@Body() body: MemberCreationDto): Promise<Member> {
     return await this.memberService.createMember(body);
+  }
+
+  @Delete('/member')
+  async deleteMember(@Body() body: MemberByIdDto): Promise<void> {
+    const member = await this.memberService.getMemberById(body.id);
+    await this.memberService.deleteMember(member);
   }
 }

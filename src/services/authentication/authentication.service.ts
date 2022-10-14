@@ -17,6 +17,7 @@ export class AuthenticationTokenService {
     private readonly randomService: RandomService,
   ) {
     this.loginRepository = AppDataSource.getRepository(Login);
+    this.memberRepository = AppDataSource.getRepository(Member);
   }
 
   async createAuthenticationToken(member: Member): Promise<string> {
@@ -37,12 +38,14 @@ export class AuthenticationTokenService {
   }
 
   async getMemberFromAuthToken(authToken: string): Promise<Member> {
+    authToken = authToken.split(' ')[1];
     const memberId = await this.loginRepository.findOne({
       where: { authtoken: authToken },
     });
     if (!memberId) {
       return;
     }
+
     const member = await this.memberRepository.findOne({
       where: { id: memberId.id },
     });
