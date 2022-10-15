@@ -1,7 +1,7 @@
+import { LoginService } from './../login/login.service';
 import { MemberCreationDto } from './../../dto/member';
-import { Login } from '../../entities/login/login.entity';
 import { AppDataSource } from './../../data-source';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../../entities/member/member.entity';
@@ -9,12 +9,11 @@ import { Member } from '../../entities/member/member.entity';
 @Injectable()
 export class MemberService {
   constructor(
-    @InjectRepository(Login)
-    private readonly loginRepository: Repository<Login>,
+    @Inject(forwardRef(() => LoginService))
+    private readonly loginService: LoginService,
     @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,
   ) {
-    this.loginRepository = AppDataSource.getRepository(Login);
     this.memberRepository = AppDataSource.getRepository(Member);
   }
 
@@ -34,11 +33,8 @@ export class MemberService {
     });
   }
 
-  async deleteAllMembers(): Promise<void> {
-    const allMembers = await this.getAllMembers();
-    allMembers.forEach(
-      async (member) => await this.memberRepository.delete({ id: member.id }),
-    );
+  async deleteMember(member: Member): Promise<void> {
+    await this.memberRepository.delete({ id: member.id });
   }
 
   async createMember(body: MemberCreationDto): Promise<Member> {
@@ -48,14 +44,22 @@ export class MemberService {
     member.email = body.email;
     member.phone_number = body.phone_number;
     await member.save();
+
+    const memberRetrieved = await this.memberRepository.findOne({
+      where: {
+        email: member.email,
+        name: member.name,
+        phone_number: member.phone_number,
+      },
+    });
+
+    await this.loginService.createLogin({
+      username: body.username,
+      password: body.password,
+      id: memberRetrieved.id,
+    });
+
     console.log(`Created member for ${member.name}`);
-    // create login entity through login service
-    // this is temperary for now
-    const login = this.loginRepository.create();
-    login.password = body.password;
-    login.username = body.username;
-    login.id = member.id;
-    login.save();
     return member;
   }
 }

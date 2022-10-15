@@ -10,5 +10,5 @@ export class Log extends BaseEntity {
   action: string;
 
   @Column({ type: 'int', transformer: dateColumnTransformer })
-  time: number;
+  time: moment.Moment;
 }

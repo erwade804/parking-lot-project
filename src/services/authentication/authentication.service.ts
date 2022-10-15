@@ -1,6 +1,6 @@
 import { Login } from './../../entities/login/login.entity';
 import { RandomService } from './../random/random.service';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Member } from '../../entities/member/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,9 +14,11 @@ export class AuthenticationTokenService {
     private readonly loginRepository: Repository<Login>,
     @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,
+    @Inject(forwardRef(() => RandomService))
     private readonly randomService: RandomService,
   ) {
     this.loginRepository = AppDataSource.getRepository(Login);
+    this.memberRepository = AppDataSource.getRepository(Member);
   }
 
   async createAuthenticationToken(member: Member): Promise<string> {
@@ -37,12 +39,14 @@ export class AuthenticationTokenService {
   }
 
   async getMemberFromAuthToken(authToken: string): Promise<Member> {
+    authToken = authToken.split(' ')[1];
     const memberId = await this.loginRepository.findOne({
       where: { authtoken: authToken },
     });
     if (!memberId) {
       return;
     }
+
     const member = await this.memberRepository.findOne({
       where: { id: memberId.id },
     });

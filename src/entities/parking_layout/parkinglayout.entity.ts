@@ -13,6 +13,4 @@ export class ParkingLayout extends BaseEntity {
 
   @Column()
   type: string;
-
-
 }
