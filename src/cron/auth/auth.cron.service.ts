@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 import { MemberService } from '../../services/member/member.service';
 import { RandomService } from '../../services/random/random.service';
 import * as moment from 'moment';
-// import * from 'moment' as moment;
 
 @Injectable()
 export class AuthCron {
@@ -28,6 +27,7 @@ export class AuthCron {
 
   @Cron(CronExpression.EVERY_MINUTE)
   async resetAuthLogin() {
+    console.log('reset auth');
     const allMembers = await this.memberService.getAllMembers();
     Promise.all(
       allMembers.map(async (member) => {
@@ -37,7 +37,10 @@ export class AuthCron {
         if (
           moment(login.lastUpdated).isBefore(moment().subtract(15, 'minutes'))
         ) {
+          console.log('updating', login.id);
           login.authtoken = '';
+          login.lastUpdated = moment();
+          await this.loginRepository.update({ id: login.id }, login);
         }
       }),
     );

@@ -1,7 +1,8 @@
+import { MemberService } from './../member/member.service';
 import { RandomService } from './../random/random.service';
 import { Login } from '../../entities/login/login.entity';
 import { AppDataSource } from './../../data-source';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../../entities/member/member.entity';
@@ -14,6 +15,8 @@ export class LoginService {
     @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,
     private readonly randomService: RandomService,
+    @Inject(forwardRef(() => MemberService))
+    private readonly memberService: MemberService,
   ) {
     this.loginRepository = AppDataSource.getRepository(Login);
     this.memberRepository = AppDataSource.getRepository(Member);
@@ -29,12 +32,21 @@ export class LoginService {
     return member;
   }
 
-  async createAuthToken(member: Member): Promise<void> {
+  async createAuthToken(member: Member): Promise<string> {
     const login = await this.loginRepository.findOne({
       where: { id: member.id },
     });
     login.authtoken = await this.randomService.randomToken();
     await this.loginRepository.update({ id: login.id }, login);
+    return login.authtoken;
+  }
+
+  async login(creds: { username: string; password: string }): Promise<string> {
+    const login = await this.loginRepository.findOne({
+      where: { username: creds.username, password: creds.password },
+    });
+    const member = await this.memberService.getMemberById(login.id);
+    return await this.createAuthToken(member);
   }
 
   async createLogin(creds: {
@@ -47,6 +59,10 @@ export class LoginService {
     login.username = creds.username;
     login.password = creds.password;
     login.id = creds.id;
-    login.save();
+    await login.save();
+  }
+
+  async deleteLogin(id: number): Promise<void> {
+    await this.loginRepository.delete({ id: id });
   }
 }

@@ -1,5 +1,6 @@
+import { AuthenticationTokenService } from './../authentication/authentication.service';
 import { Login } from './../../entities/login/login.entity';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomInt } from 'crypto';
 import { Member } from '../../entities/member/member.entity';
@@ -16,6 +17,8 @@ export class RandomService {
     private readonly memberRepository: Repository<Member>,
     @InjectRepository(Login)
     private readonly loginRepository: Repository<Login>,
+    @Inject(forwardRef(() => AuthenticationTokenService))
+    private readonly authenticationTokenService: AuthenticationTokenService,
   ) {}
   async randomPlate(): Promise<string> {
     let plateNumber = '';
@@ -46,7 +49,10 @@ export class RandomService {
         randomInt(0, legalTokenCharacters.length),
       );
     }
-    return this.checkCompliantToken(string) ? string : this.randomToken();
+    return this.checkCompliantToken(string) &&
+      (await this.authenticationTokenService.crossCheckAuthToken(string))
+      ? string
+      : this.randomToken();
   }
 
   async checkCompliantToken(token: string): Promise<boolean> {

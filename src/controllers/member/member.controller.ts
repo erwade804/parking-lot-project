@@ -14,6 +14,22 @@ export class MemberController {
     private readonly authenticationTokenService: AuthenticationTokenService,
   ) {}
 
+  // example bearer token authentication with id checks,
+  // credentials will be different for each endpoint, don't count on it being body.id
+  @Delete()
+  @ApiBearerAuth()
+  async deleteMember(
+    @Body() body: MemberByIdDto,
+    @Req() request: Request,
+  ): Promise<void> {
+    const member = await this.authenticationTokenService.getMemberFromAuthToken(
+      request.headers.authorization,
+    );
+    if (member.id === body.id) {
+      await this.memberService.deleteMember(member);
+    }
+  }
+
   @Get('/all')
   @ApiBearerAuth()
   async getAllMembers(@Req() request: Request): Promise<Member[]> {
@@ -36,11 +52,5 @@ export class MemberController {
   @Post('/create')
   async postCreateMember(@Body() body: MemberCreationDto): Promise<Member> {
     return await this.memberService.createMember(body);
-  }
-
-  @Delete('/member')
-  async deleteMember(@Body() body: MemberByIdDto): Promise<void> {
-    const member = await this.memberService.getMemberById(body.id);
-    await this.memberService.deleteMember(member);
   }
 }

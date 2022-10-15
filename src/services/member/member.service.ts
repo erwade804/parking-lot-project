@@ -1,8 +1,7 @@
 import { LoginService } from './../login/login.service';
 import { MemberCreationDto } from './../../dto/member';
-import { Login } from '../../entities/login/login.entity';
 import { AppDataSource } from './../../data-source';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../../entities/member/member.entity';
@@ -10,13 +9,11 @@ import { Member } from '../../entities/member/member.entity';
 @Injectable()
 export class MemberService {
   constructor(
-    @InjectRepository(Login)
-    private readonly loginRepository: Repository<Login>,
+    @Inject(forwardRef(() => LoginService))
+    private readonly loginService: LoginService,
     @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,
-    private readonly loginService: LoginService,
   ) {
-    this.loginRepository = AppDataSource.getRepository(Login);
     this.memberRepository = AppDataSource.getRepository(Member);
   }
 
