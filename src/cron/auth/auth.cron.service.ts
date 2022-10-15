@@ -29,10 +29,12 @@ export class AuthCron {
         if (
           moment(login.lastUpdated).isBefore(moment().subtract(15, 'minutes'))
         ) {
-          console.log('updating', login.id);
-          login.authtoken = '';
-          login.lastUpdated = moment();
-          await this.loginRepository.update({ id: login.id }, login);
+          if (login.authtoken !== '') {
+            console.log('removing auth token for member id:', login.id);
+            login.authtoken = '';
+            login.lastUpdated = moment();
+            await this.loginRepository.update({ id: login.id }, login);
+          }
         }
       }),
     );

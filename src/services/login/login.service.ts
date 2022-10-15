@@ -6,6 +6,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../../entities/member/member.entity';
+import * as moment from 'moment';
 
 @Injectable()
 export class LoginService {
@@ -37,6 +38,7 @@ export class LoginService {
       where: { id: member.id },
     });
     login.authtoken = await this.randomService.randomToken();
+    login.lastUpdated = moment();
     await this.loginRepository.update({ id: login.id }, login);
     return login.authtoken;
   }

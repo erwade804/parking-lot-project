@@ -7,4 +7,4 @@ import { Module } from '@nestjs/common';
   controllers: [ReservationController],
   providers: [],
 })
-export class SeedControllerModule {}
+export class ReservationControllerModule {}

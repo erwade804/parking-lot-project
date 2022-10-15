@@ -30,6 +30,14 @@ export class MemberController {
     }
   }
 
+  @Get()
+  @ApiBearerAuth()
+  async getMemberByToken(@Req() request: Request): Promise<Member> {
+    return await this.authenticationTokenService.getMemberFromAuthToken(
+      request.headers.authorization,
+    );
+  }
+
   @Get('/all')
   @ApiBearerAuth()
   async getAllMembers(@Req() request: Request): Promise<Member[]> {
