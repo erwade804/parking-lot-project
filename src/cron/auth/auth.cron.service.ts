@@ -27,6 +27,7 @@ export class AuthCron {
           where: { id: member.id },
         });
         if (
+          login &&
           moment(login.lastUpdated).isBefore(moment().subtract(15, 'minutes'))
         ) {
           if (login.authtoken !== '') {

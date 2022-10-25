@@ -1,10 +1,11 @@
+import { Member } from './../../entities/member/member.entity';
 import { Login } from './../../entities/login/login.entity';
 import { RandomService } from './../random/random.service';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { Member } from '../../entities/member/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AppDataSource } from './../../data-source';
+import * as moment from 'moment';
 
 @Injectable()
 export class AuthenticationTokenService {
@@ -54,5 +55,15 @@ export class AuthenticationTokenService {
       return;
     }
     return member;
+  }
+
+  async extendAuthToken(member: Member): Promise<void> {
+    const login = await this.loginRepository.findOne({
+      where: { id: member.id },
+    });
+
+    login.lastUpdated = moment();
+
+    await this.loginRepository.update({ id: login.id }, login);
   }
 }
