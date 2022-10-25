@@ -1,7 +1,102 @@
+import { ReservationDto } from './../../dto/reservation';
+import { Reservation } from './../../entities/reservation/reservation.entity';
+import { AuthenticationTokenService } from './../../services/authentication/authentication.service';
 import { ReservationService } from './../../services/reservation/reservation.service';
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Request } from 'express';
+import * as moment from 'moment';
 
 @Controller('/reservation')
 export class ReservationController {
-  constructor(private readonly reservationService: ReservationService) {}
+  constructor(
+    private readonly reservationService: ReservationService,
+    private readonly authService: AuthenticationTokenService,
+  ) {}
+
+  @Delete(':reservationId')
+  @ApiBearerAuth()
+  async removeReservation(
+    @Req() request: Request,
+    @Param('reservationId', ParseIntPipe) reservationId: number,
+  ): Promise<void> {
+    const member = await this.authService.getMemberFromAuthToken(
+      request.headers.authorization,
+    );
+    console.log('member', member);
+    const reservation = await this.reservationService.getReservation(
+      reservationId,
+    );
+    if (reservation.id === member.id) {
+      await this.reservationService.cancelReservation(reservationId);
+    }
+    await this.authService.extendAuthToken(member);
+  }
+
+  @Get()
+  @ApiBearerAuth()
+  async getReservations(@Req() request: Request): Promise<Reservation[]> {
+    const member = await this.authService.getMemberFromAuthToken(
+      request.headers.authorization,
+    );
+    console.log('getting all reservations');
+    console.log(await this.reservationService.getAllReservations());
+    // return await this.reservationService.getAllReservations();
+    await this.authService.extendAuthToken(member);
+    return await this.reservationService.getReservations(member);
+  }
+
+  @Patch(':reservationId')
+  @ApiBearerAuth()
+  async updateReservation(
+    @Req() request: Request,
+    @Param('reservationId', ParseIntPipe) reservationId: number,
+    @Body() reservationDto: ReservationDto,
+  ): Promise<void> {
+    const member = await this.authService.getMemberFromAuthToken(
+      request.headers.authorization,
+    );
+    const reservation = await this.reservationService.getReservation(
+      reservationId,
+    );
+    console.log('reservation', reservationId, reservation);
+    if (reservation.id !== member.id) {
+      return;
+      //throw error don't return
+    }
+    await this.reservationService.updateReservation(
+      reservation,
+      moment(reservationDto.start_time),
+      moment(reservationDto.stop_time),
+    );
+    await this.authService.extendAuthToken(member);
+  }
+
+  @Post('/create')
+  @ApiBearerAuth()
+  async createReservation(
+    @Req() request: Request,
+    @Body() reserve: ReservationDto,
+  ): Promise<Reservation> {
+    const member = await this.authService.getMemberFromAuthToken(
+      request.headers.authorization,
+    );
+    console.log(reserve.start_time);
+    await this.authService.extendAuthToken(member);
+    return await this.reservationService.createReservation(
+      member,
+      moment(reserve.start_time * 1000),
+      moment(reserve.stop_time * 1000),
+    );
+  }
 }

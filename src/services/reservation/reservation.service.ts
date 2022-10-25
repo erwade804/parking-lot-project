@@ -9,52 +9,64 @@ import * as moment from 'moment';
 @Injectable()
 export class ReservationService {
   constructor(
-    @InjectRepository(Member)
-    private readonly memberRepository: Repository<Member>,
+    // @InjectRepository(Member)
+    // private readonly memberRepository: Repository<Member>,
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
   ) {
-    memberRepository = AppDataSource.getRepository(Member);
+    // memberRepository = AppDataSource.getRepository(Member);
     reservationRepository = AppDataSource.getRepository(Reservation);
   }
 
   async createReservation(
-    startstop: {
-      startTime: moment.Moment;
-      endTime: moment.Moment;
-    },
     member: Member,
+    start: moment.Moment,
+    end: moment.Moment,
   ): Promise<Reservation> {
     const reservation = this.reservationRepository.create();
     reservation.id = member.id;
-    reservation.start_time = startstop.startTime;
-    reservation.end_time = startstop.endTime;
+    reservation.start_time = start;
+    reservation.end_time = end;
     reservation.entry_time = moment(0);
     reservation.exit_time = moment(0);
     await reservation.save();
-    console.log(reservation);
     return reservation;
   }
 
   async cancelReservation(reservationId: number): Promise<void> {
     await this.reservationRepository.delete({
-      id: reservationId,
+      book_id: reservationId,
     });
   }
 
-  async updateReservation(
-    reservationId: number,
-    startstop: {
-      startTime: moment.Moment;
-      endTime: moment.Moment;
-    },
-  ): Promise<Reservation> {
-    const reservation = await this.reservationRepository.findOne({
-      where: { id: reservationId },
+  async getReservation(reservationId: number): Promise<Reservation> {
+    return await this.reservationRepository.findOne({
+      where: { book_id: reservationId },
     });
-    reservation.start_time = startstop.startTime;
-    reservation.end_time = startstop.endTime;
-    await this.reservationRepository.update({ id: reservationId }, reservation);
+  }
+
+  async getReservations(member: Member): Promise<Reservation[]> {
+    const reservations = await this.reservationRepository.find({
+      where: { id: member.id },
+    });
+    return reservations;
+  }
+
+  async getAllReservations(): Promise<Reservation[]> {
+    return await this.reservationRepository.find({ where: { book_id: 1 } });
+  }
+
+  async updateReservation(
+    reservation: Reservation,
+    start: moment.Moment,
+    end: moment.Moment,
+  ): Promise<Reservation> {
+    reservation.start_time = start;
+    reservation.end_time = end;
+    await this.reservationRepository.update(
+      { book_id: reservation.book_id },
+      reservation,
+    );
     return reservation;
   }
 }
