@@ -47,7 +47,6 @@ export class AuthenticationTokenService {
     if (!memberId) {
       return;
     }
-
     const member = await this.memberRepository.findOne({
       where: { id: memberId.id },
     });

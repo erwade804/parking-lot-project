@@ -11,7 +11,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class MemberController {
   constructor(
     private readonly memberService: MemberService,
-    private readonly authenticationTokenService: AuthenticationTokenService,
+    private readonly authService: AuthenticationTokenService,
   ) {}
 
   // example bearer token authentication with id checks,
@@ -22,7 +22,7 @@ export class MemberController {
     @Body() body: MemberByIdDto,
     @Req() request: Request,
   ): Promise<void> {
-    const member = await this.authenticationTokenService.getMemberFromAuthToken(
+    const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
     if (member.id === body.id) {
@@ -33,7 +33,7 @@ export class MemberController {
   @Get()
   @ApiBearerAuth()
   async getMemberByToken(@Req() request: Request): Promise<Member> {
-    return await this.authenticationTokenService.getMemberFromAuthToken(
+    return await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
   }
@@ -41,7 +41,7 @@ export class MemberController {
   @Get('/all')
   @ApiBearerAuth()
   async getAllMembers(@Req() request: Request): Promise<Member[]> {
-    const member = await this.authenticationTokenService.getMemberFromAuthToken(
+    const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
     if (member) return await this.memberService.getAllMembers();

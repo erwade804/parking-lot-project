@@ -1,3 +1,5 @@
+import { InvalidLogoutSequenceException } from './../../exceptions/invalidlogoutsequence';
+import { IncorrectPasswordOrUsernameException } from '../../exceptions/userdoesnotexist';
 import { MemberService } from './../member/member.service';
 import { RandomService } from './../random/random.service';
 import { Login } from '../../entities/login/login.entity';
@@ -47,8 +49,23 @@ export class LoginService {
     const login = await this.loginRepository.findOne({
       where: { username: creds.username, password: creds.password },
     });
+    if (!login) {
+      throw new IncorrectPasswordOrUsernameException();
+    }
     const member = await this.memberService.getMemberById(login.id);
     return await this.createAuthToken(member);
+  }
+
+  async logout(member: Member): Promise<void> {
+    const login = await this.loginRepository.findOne({
+      where: { id: member.id },
+    });
+    if (!login) {
+      throw new InvalidLogoutSequenceException();
+    }
+    login.authtoken = '';
+    login.lastUpdated = moment();
+    await this.loginRepository.update({ id: member.id }, login);
   }
 
   async createLogin(creds: {
@@ -56,12 +73,18 @@ export class LoginService {
     password: string;
     id: number;
   }): Promise<void> {
-    console.log(creds);
     const login = this.loginRepository.create();
     login.username = creds.username;
     login.password = creds.password;
     login.id = creds.id;
     await login.save();
+  }
+
+  async userExists(username: string): Promise<boolean> {
+    return (
+      (await this.loginRepository.count({ where: { username: username } })) ===
+      1
+    );
   }
 
   async deleteLogin(id: number): Promise<void> {

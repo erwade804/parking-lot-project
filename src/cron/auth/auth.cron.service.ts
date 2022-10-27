@@ -21,11 +21,11 @@ export class AuthCron {
   async resetAuthLogin() {
     console.log('reset auth');
     const allMembers = await this.memberService.getAllMembers();
+    const allLogins = await this.loginRepository.find();
+    console.log(allLogins);
     Promise.all(
       allMembers.map(async (member) => {
-        const login = await this.loginRepository.findOne({
-          where: { id: member.id },
-        });
+        const login = allLogins.filter((login) => login.id === member.id)[0];
         if (
           login &&
           moment(login.lastUpdated).isBefore(moment().subtract(15, 'minutes'))

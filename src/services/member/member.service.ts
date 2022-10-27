@@ -1,3 +1,4 @@
+import { ExistingUserException } from './../../exceptions/existinguser';
 import { LoginService } from './../login/login.service';
 import { MemberCreationDto } from './../../dto/member';
 import { AppDataSource } from './../../data-source';
@@ -38,6 +39,9 @@ export class MemberService {
   }
 
   async createMember(body: MemberCreationDto): Promise<Member> {
+    if (this.loginService.userExists(body.username) || this.userExists(body)) {
+      throw new ExistingUserException();
+    }
     const member = this.memberRepository.create();
     member.license_number = body.license_plate;
     member.name = body.name;
@@ -59,7 +63,18 @@ export class MemberService {
       id: memberRetrieved.id,
     });
 
-    console.log(`Created member for ${member.name}`);
     return member;
+  }
+
+  async userExists(body: MemberCreationDto): Promise<boolean> {
+    return (
+      (await this.memberRepository.count({
+        where: [
+          { phone_number: body.phone_number },
+          { email: body.email },
+          { license_number: body.license_plate },
+        ],
+      })) === 1
+    );
   }
 }
