@@ -1,3 +1,4 @@
+import { UserDoesNotMatchReservationException } from './../../exceptions/notvaliduser';
 import { ReservationDto } from './../../dto/reservation';
 import { Reservation } from './../../entities/reservation/reservation.entity';
 import { AuthenticationTokenService } from './../../services/authentication/authentication.service';
@@ -33,7 +34,6 @@ export class ReservationController {
     const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
-    console.log('member', member);
     const reservation = await this.reservationService.getReservation(
       reservationId,
     );
@@ -49,9 +49,6 @@ export class ReservationController {
     const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
-    console.log('getting all reservations');
-    console.log(await this.reservationService.getAllReservations());
-    // return await this.reservationService.getAllReservations();
     await this.authService.extendAuthToken(member);
     return await this.reservationService.getReservations(member);
   }
@@ -69,10 +66,8 @@ export class ReservationController {
     const reservation = await this.reservationService.getReservation(
       reservationId,
     );
-    console.log('reservation', reservationId, reservation);
     if (reservation.id !== member.id) {
-      return;
-      //throw error don't return
+      throw new UserDoesNotMatchReservationException();
     }
     await this.reservationService.updateReservation(
       reservation,
@@ -91,7 +86,6 @@ export class ReservationController {
     const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
-    console.log(reserve.start_time);
     await this.authService.extendAuthToken(member);
     return await this.reservationService.createReservation(
       member,

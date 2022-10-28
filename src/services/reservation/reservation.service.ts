@@ -1,3 +1,5 @@
+import { StartBeforeNowException } from './../../exceptions/startbeforenow';
+import { StartAfterEndException } from './../../exceptions/startafterend';
 import { AppDataSource } from './../../data-source';
 import { Reservation } from './../../entities/reservation/reservation.entity';
 import { Injectable } from '@nestjs/common';
@@ -9,12 +11,12 @@ import * as moment from 'moment';
 @Injectable()
 export class ReservationService {
   constructor(
-    // @InjectRepository(Member)
-    // private readonly memberRepository: Repository<Member>,
+    @InjectRepository(Member)
+    private readonly memberRepository: Repository<Member>,
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
   ) {
-    // memberRepository = AppDataSource.getRepository(Member);
+    memberRepository = AppDataSource.getRepository(Member);
     reservationRepository = AppDataSource.getRepository(Reservation);
   }
 
@@ -23,6 +25,7 @@ export class ReservationService {
     start: moment.Moment,
     end: moment.Moment,
   ): Promise<Reservation> {
+    this.checkValidReservation(start, end);
     const reservation = this.reservationRepository.create();
     reservation.id = member.id;
     reservation.start_time = start;
@@ -61,6 +64,7 @@ export class ReservationService {
     start: moment.Moment,
     end: moment.Moment,
   ): Promise<Reservation> {
+    this.checkValidReservation(start, end);
     reservation.start_time = start;
     reservation.end_time = end;
     await this.reservationRepository.update(
@@ -68,5 +72,15 @@ export class ReservationService {
       reservation,
     );
     return reservation;
+  }
+
+  checkValidReservation(start: moment.Moment, end: moment.Moment): boolean {
+    if (start.isAfter(end)) {
+      throw new StartAfterEndException();
+    }
+    if (start.isBefore(moment())) {
+      throw new StartBeforeNowException();
+    }
+    return true;
   }
 }
