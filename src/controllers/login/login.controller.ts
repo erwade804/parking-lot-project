@@ -3,6 +3,7 @@ import { LoginService } from './../../services/login/login.service';
 import { AuthenticationTokenService } from './../../services/authentication/authentication.service';
 import { Body, Controller, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('/account')
 export class LoginController {
@@ -20,6 +21,7 @@ export class LoginController {
   }
 
   @Post('/logout')
+  @ApiBearerAuth()
   async logout(@Req() request: Request): Promise<void> {
     const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,

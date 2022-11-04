@@ -87,7 +87,7 @@ export class LoginService {
     );
   }
 
-  async deleteLogin(id: number): Promise<void> {
-    await this.loginRepository.delete({ id: id });
+  async deleteLogin(member: Member): Promise<void> {
+    await this.loginRepository.delete({ id: member.id });
   }
 }

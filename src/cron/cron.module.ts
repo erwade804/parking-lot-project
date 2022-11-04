@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthCronModule } from './auth/auth.cron.service.module';
-import { TestCronModule } from './testcron/test.cron.module';
 
 @Module({
-  imports: [TestCronModule, AuthCronModule],
+  imports: [AuthCronModule],
 })
 export class CronModule {}

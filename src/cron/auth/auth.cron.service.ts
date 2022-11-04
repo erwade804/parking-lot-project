@@ -22,7 +22,7 @@ export class AuthCron {
     console.log('reset auth');
     const allMembers = await this.memberService.getAllMembers();
     const allLogins = await this.loginRepository.find();
-    console.log(allLogins);
+    // console.log(allLogins);
     Promise.all(
       allMembers.map(async (member) => {
         const login = allLogins.filter((login) => login.id === member.id)[0];

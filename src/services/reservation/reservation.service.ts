@@ -83,4 +83,19 @@ export class ReservationService {
     }
     return true;
   }
+
+  async nextReservation(member: Member): Promise<Reservation> {
+    console.log('here 0');
+    console.log(member);
+    const reservations = await this.reservationRepository.find({
+      where: { id: member.id },
+    });
+    console.log('here');
+    const reservationSoon = reservations.sort(
+      (best, guess) => best.start_time.unix() - guess.start_time.unix(),
+    );
+    console.log('here2');
+    console.log(reservationSoon);
+    return reservationSoon[0];
+  }
 }
