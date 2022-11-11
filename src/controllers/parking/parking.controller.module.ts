@@ -1,3 +1,4 @@
+import { ParkingLayout } from './../../entities/parking_layout/parkinglayout.entity';
 import { Reservation } from './../../entities/reservation/reservation.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MemberServiceModule } from './../../services/member/member.service.module';
@@ -11,7 +12,7 @@ import { ParkingController } from './parking.controller';
     ReservationServiceModule,
     AuthenticationTokenServiceModule,
     MemberServiceModule,
-    TypeOrmModule.forFeature([Reservation]),
+    TypeOrmModule.forFeature([Reservation, ParkingLayout]),
   ],
   controllers: [ParkingController],
   providers: [],

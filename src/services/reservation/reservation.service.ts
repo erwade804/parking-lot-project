@@ -1,3 +1,4 @@
+import { ReservationHisotry } from './../../entities/reservation_history/reservation_history.entity';
 import { StartBeforeNowException } from './../../exceptions/startbeforenow';
 import { StartAfterEndException } from './../../exceptions/startafterend';
 import { AppDataSource } from './../../data-source';
@@ -15,6 +16,8 @@ export class ReservationService {
     private readonly memberRepository: Repository<Member>,
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
+    @InjectRepository(ReservationHisotry)
+    private readonly reservationHistoryRepository: Repository<ReservationHisotry>,
   ) {
     memberRepository = AppDataSource.getRepository(Member);
     reservationRepository = AppDataSource.getRepository(Reservation);
@@ -97,5 +100,17 @@ export class ReservationService {
     console.log('here2');
     console.log(reservationSoon);
     return reservationSoon[0];
+  }
+
+  async finishReservation(reservation: Reservation): Promise<void> {
+    const resHis = this.reservationHistoryRepository.create();
+    resHis.book_id = reservation.book_id;
+    resHis.end_time = reservation.end_time;
+    resHis.start_time = reservation.start_time;
+    resHis.entry_time = reservation.entry_time;
+    resHis.exit_time = reservation.exit_time;
+    resHis.id = reservation.id;
+    await this.reservationRepository.delete({ book_id: reservation.book_id });
+    await this.reservationHistoryRepository.save(resHis);
   }
 }

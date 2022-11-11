@@ -13,4 +13,7 @@ export class ParkingLayout extends BaseEntity {
 
   @Column()
   type: string;
+
+  @Column({ default: false })
+  occupied: boolean;
 }

@@ -41,7 +41,8 @@ export class MemberService {
   async createMember(body: MemberCreationDto): Promise<Member> {
     if (
       (await this.loginService.userExists(body.username)) ||
-      (await this.userExists(body))
+      (await this.userExists(body)) ||
+      (await this.loginService.passwordAllowed(body.password))
     ) {
       throw new ExistingUserException();
     }

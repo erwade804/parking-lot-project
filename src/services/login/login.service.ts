@@ -90,4 +90,10 @@ export class LoginService {
   async deleteLogin(member: Member): Promise<void> {
     await this.loginRepository.delete({ id: member.id });
   }
+
+  async passwordAllowed(password: string): Promise<boolean> {
+    if (password.length < 7) return false;
+    // can change the password requierments here
+    return true;
+  }
 }
