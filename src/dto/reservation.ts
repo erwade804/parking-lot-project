@@ -7,3 +7,11 @@ export class ReservationDto {
   @ApiProperty()
   stop_time: number;
 }
+
+export class ParkingSpotDto {
+  @ApiProperty()
+  spot: number;
+
+  @ApiProperty()
+  plate: string;
+}

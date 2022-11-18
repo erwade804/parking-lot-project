@@ -86,6 +86,7 @@ export class ReservationController {
     const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
+    console.log(member);
     await this.authService.extendAuthToken(member);
     return await this.reservationService.createReservation(
       member,

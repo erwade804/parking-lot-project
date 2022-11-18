@@ -1,3 +1,4 @@
+import { LoginService } from './../../services/login/login.service';
 import { AuthenticationTokenService } from './../../services/authentication/authentication.service';
 import { MemberByPlateDto, MemberByIdDto } from './../../dto/member';
 import { Body, Controller, Get, Post, Delete, Req } from '@nestjs/common';
@@ -12,6 +13,7 @@ export class MemberController {
   constructor(
     private readonly memberService: MemberService,
     private readonly authService: AuthenticationTokenService,
+    private readonly loginService: LoginService,
   ) {}
 
   // example bearer token authentication with id checks,
@@ -27,6 +29,7 @@ export class MemberController {
     );
     if (member.id === body.id) {
       await this.memberService.deleteMember(member);
+      await this.loginService.deleteLogin(member);
     }
   }
 
@@ -44,6 +47,7 @@ export class MemberController {
     const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
+    console.log(member);
     if (member) return await this.memberService.getAllMembers();
   }
 

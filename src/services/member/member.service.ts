@@ -39,7 +39,11 @@ export class MemberService {
   }
 
   async createMember(body: MemberCreationDto): Promise<Member> {
-    if (this.loginService.userExists(body.username) || this.userExists(body)) {
+    if (
+      (await this.loginService.userExists(body.username)) ||
+      (await this.userExists(body)) ||
+      (await this.loginService.passwordAllowed(body.password))
+    ) {
       throw new ExistingUserException();
     }
     const member = this.memberRepository.create();
@@ -68,13 +72,15 @@ export class MemberService {
 
   async userExists(body: MemberCreationDto): Promise<boolean> {
     return (
-      (await this.memberRepository.count({
-        where: [
-          { phone_number: body.phone_number },
-          { email: body.email },
-          { license_number: body.license_plate },
-        ],
-      })) === 1
+      (
+        await this.memberRepository.find({
+          where: [
+            { phone_number: body.phone_number },
+            { email: body.email },
+            { license_number: body.license_plate },
+          ],
+        })
+      ).length > 1
     );
   }
 }

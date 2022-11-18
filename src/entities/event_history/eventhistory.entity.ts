@@ -11,7 +11,7 @@ export class EventHistory extends BaseEntity {
   id: number;
 
   @Column()
-  licensenumber: string;
+  license_number: string;
 
   @Column({ type: 'int', transformer: dateColumnTransformer })
   timestamp: moment.Moment;
