@@ -20,4 +20,7 @@ export class Reservation extends BaseEntity {
 
   @Column({ type: 'int', transformer: dateColumnTransformer, default: 0 })
   exit_time: moment.Moment;
+
+  @Column()
+  parking_spot: number;
 }

@@ -1,4 +1,5 @@
-import { ReservationHisotry } from './reservation_history/reservation_history.entity';
+import { Subscription } from './subscription/subscription.entity';
+import { ReservationHistory } from './reservation_history/reservation_history.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { Member } from '../entities/member/member.entity';
@@ -13,7 +14,8 @@ export const entities = [
   Reservation,
   Log,
   ParkingLayout,
-  ReservationHisotry,
+  ReservationHistory,
+  Subscription,
 ];
 const importExports = [TypeOrmModule.forFeature(entities)];
 

@@ -1,4 +1,4 @@
-import { ReservationHisotry } from './../../entities/reservation_history/reservation_history.entity';
+import { ReservationHistory } from './../../entities/reservation_history/reservation_history.entity';
 import { StartBeforeNowException } from './../../exceptions/startbeforenow';
 import { StartAfterEndException } from './../../exceptions/startafterend';
 import { AppDataSource } from './../../data-source';
@@ -16,8 +16,8 @@ export class ReservationService {
     private readonly memberRepository: Repository<Member>,
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
-    @InjectRepository(ReservationHisotry)
-    private readonly reservationHistoryRepository: Repository<ReservationHisotry>,
+    @InjectRepository(ReservationHistory)
+    private readonly reservationHistoryRepository: Repository<ReservationHistory>,
   ) {
     memberRepository = AppDataSource.getRepository(Member);
     reservationRepository = AppDataSource.getRepository(Reservation);
@@ -27,6 +27,7 @@ export class ReservationService {
     member: Member,
     start: moment.Moment,
     end: moment.Moment,
+    parkingSpot: number,
   ): Promise<Reservation> {
     this.checkValidReservation(start, end);
     const reservation = this.reservationRepository.create();
@@ -35,6 +36,7 @@ export class ReservationService {
     reservation.end_time = end;
     reservation.entry_time = moment(0);
     reservation.exit_time = moment(0);
+    reservation.parking_spot = parkingSpot;
     await reservation.save();
     return reservation;
   }
@@ -67,6 +69,7 @@ export class ReservationService {
     start: moment.Moment,
     end: moment.Moment,
   ): Promise<Reservation> {
+    // check if spot is still available
     this.checkValidReservation(start, end);
     reservation.start_time = start;
     reservation.end_time = end;
@@ -88,18 +91,39 @@ export class ReservationService {
   }
 
   async nextReservation(member: Member): Promise<Reservation> {
-    console.log('here 0');
-    console.log(member);
     const reservations = await this.reservationRepository.find({
       where: { id: member.id },
     });
-    console.log('here');
     const reservationSoon = reservations.sort(
       (best, guess) => best.start_time.unix() - guess.start_time.unix(),
     );
-    console.log('here2');
-    console.log(reservationSoon);
     return reservationSoon[0];
+  }
+
+  async reservationAllowed(
+    start: moment.Moment,
+    end: moment.Moment,
+    parkingSpot: number,
+  ): Promise<boolean> {
+    const reservations = (
+      await this.reservationRepository.find({
+        where: { parking_spot: parkingSpot },
+      })
+    ).filter((res) => {
+      if (
+        res.end_time.isBetween(start, end) ||
+        res.start_time.isBetween(start, end) ||
+        start.isBetween(res.start_time, res.end_time) ||
+        end.isBetween(res.start_time, res.end_time) ||
+        res.start_time === start ||
+        res.end_time === end ||
+        (res.start_time.isBefore(start) && res.end_time.isAfter(end))
+      ) {
+        return true;
+      }
+      return false;
+    });
+    return reservations.length === 0;
   }
 
   async finishReservation(reservation: Reservation): Promise<void> {

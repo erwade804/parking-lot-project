@@ -42,7 +42,7 @@ export class MemberService {
     if (
       (await this.loginService.userExists(body.username)) ||
       (await this.userExists(body)) ||
-      (await this.loginService.passwordAllowed(body.password))
+      !(await this.loginService.passwordAllowed(body.password))
     ) {
       throw new ExistingUserException();
     }
@@ -80,7 +80,7 @@ export class MemberService {
             { license_number: body.license_plate },
           ],
         })
-      ).length > 1
+      ).length === 1
     );
   }
 }

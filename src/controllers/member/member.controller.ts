@@ -27,10 +27,11 @@ export class MemberController {
     const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
-    if (member.id === body.id) {
-      await this.memberService.deleteMember(member);
-      await this.loginService.deleteLogin(member);
-    }
+    console.log('member tried to call deprecated function: ', member.id);
+    // if (member.id === body.id) {
+    //   await this.memberService.deleteMember(member);
+    //   await this.loginService.deleteLogin(member);
+    // }
   }
 
   @Get()
@@ -47,7 +48,6 @@ export class MemberController {
     const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
-    console.log(member);
     if (member) return await this.memberService.getAllMembers();
   }
 

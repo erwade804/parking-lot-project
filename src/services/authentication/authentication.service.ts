@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AppDataSource } from './../../data-source';
 import * as moment from 'moment';
+import { NotLoggedInException } from '../../exceptions/notloggedin';
 
 @Injectable()
 export class AuthenticationTokenService {
@@ -44,15 +45,13 @@ export class AuthenticationTokenService {
     const memberId = await this.loginRepository.findOne({
       where: { authtoken: authToken },
     });
-    if (!memberId) {
-      return;
-    }
+    if (!memberId) throw new NotLoggedInException();
+
     const member = await this.memberRepository.findOne({
       where: { id: memberId.id },
     });
-    if (!member) {
-      return;
-    }
+    if (!member) return;
+
     return member;
   }
 
