@@ -71,8 +71,8 @@ export class ReservationController {
     }
     await this.reservationService.updateReservation(
       reservation,
-      moment(reservationDto.start_time),
-      moment(reservationDto.stop_time),
+      moment(reservationDto.start_time * 1000),
+      moment(reservationDto.stop_time * 1000),
     );
     await this.authService.extendAuthToken(member);
   }
@@ -86,12 +86,12 @@ export class ReservationController {
     const member = await this.authService.getMemberFromAuthToken(
       request.headers.authorization,
     );
-    console.log(member);
     await this.authService.extendAuthToken(member);
     return await this.reservationService.createReservation(
       member,
       moment(reserve.start_time * 1000),
       moment(reserve.stop_time * 1000),
+      reserve.parking_spot,
     );
   }
 }

@@ -6,6 +6,9 @@ export class ReservationDto {
 
   @ApiProperty()
   stop_time: number;
+
+  @ApiProperty()
+  parking_spot: number;
 }
 
 export class ParkingSpotDto {
@@ -14,4 +17,7 @@ export class ParkingSpotDto {
 
   @ApiProperty()
   plate: string;
+
+  @ApiProperty({ default: false })
+  finalPart: boolean;
 }

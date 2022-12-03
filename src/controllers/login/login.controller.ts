@@ -28,4 +28,13 @@ export class LoginController {
     );
     await this.loginService.logout(member);
   }
+
+  @Post('/authext')
+  @ApiBearerAuth()
+  async extendAuthToken(@Req() request: Request): Promise<void> {
+    const member = await this.authService.getMemberFromAuthToken(
+      request.headers.authorization,
+    );
+    await this.authService.extendAuthToken(member);
+  }
 }

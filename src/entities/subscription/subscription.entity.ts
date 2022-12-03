@@ -2,9 +2,9 @@ import dateColumnTransformer from '../../helpers/dateColumnTransformer';
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 @Entity()
-export class ReservationHistory extends BaseEntity {
+export class Subscription extends BaseEntity {
   @PrimaryGeneratedColumn()
-  book_id: number;
+  subscription_id: number;
 
   @Column()
   id: number;
@@ -15,12 +15,12 @@ export class ReservationHistory extends BaseEntity {
   @Column({ type: 'int', transformer: dateColumnTransformer })
   end_time: moment.Moment;
 
-  @Column({ type: 'int', transformer: dateColumnTransformer })
-  entry_time: moment.Moment;
-
-  @Column({ type: 'int', transformer: dateColumnTransformer })
-  exit_time: moment.Moment;
+  @Column()
+  type: number;
 
   @Column()
   parking_spot: number;
+
+  @Column()
+  book_id: number;
 }

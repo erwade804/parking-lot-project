@@ -51,9 +51,11 @@ export class ParkingController {
     if (res.entry_time.isBefore(moment(50))) {
       res.entry_time = moment();
     } else {
-      res.exit_time = moment();
-      await this.reservationService.finishReservation(res);
-      flag = false;
+      if (body.finalPart) {
+        res.exit_time = moment();
+        await this.reservationService.finishReservation(res);
+        flag = false;
+      }
     }
     await this.parkingRepository.update(
       { parking_id: body.spot },
@@ -67,14 +69,9 @@ export class ParkingController {
   }
 
   @Get('floor/:floor')
-  @ApiBearerAuth()
   async getFloorParking(
-    @Req() request: Request,
     @Param('floor', ParseIntPipe) floor: number,
   ): Promise<ParkingLayout[]> {
-    if (request.headers.authorization !== 'Bearer park') {
-      return;
-    }
     return await this.parkingRepository.find({ where: { level: floor } });
   }
 }

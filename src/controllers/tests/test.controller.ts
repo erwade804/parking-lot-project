@@ -14,7 +14,6 @@ export class TestController {
   @Post('/auth')
   async testAuth(): Promise<string> {
     const member = await (await this.memberService.getAllMembers()).at(0);
-    console.log(member);
     return await this.authenticationTokenService.createAuthenticationToken(
       member,
     );

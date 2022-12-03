@@ -22,13 +22,12 @@ export class AuthCron {
     console.log('reset auth');
     const allMembers = await this.memberService.getAllMembers();
     const allLogins = await this.loginRepository.find();
-    // console.log(allLogins);
     Promise.all(
       allMembers.map(async (member) => {
         const login = allLogins.filter((login) => login.id === member.id)[0];
         if (
           login &&
-          moment(login.lastUpdated).isBefore(moment().subtract(15, 'minutes'))
+          login.lastUpdated.isBefore(moment().subtract(15, 'minutes'))
         ) {
           if (login.authtoken !== '') {
             console.log('removing auth token for member id:', login.id);

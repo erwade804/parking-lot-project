@@ -1,3 +1,4 @@
+import { SubscriptionServiceModule } from './subscription/subscription.service.module';
 import { LoginServiceModule } from './login/login.service.module';
 import { Module } from '@nestjs/common';
 import { MemberServiceModule } from './member/member.service.module';
@@ -12,6 +13,7 @@ import { ReservationServiceModule } from './reservation/reservation.service.modu
     AuthenticationTokenServiceModule,
     LoginServiceModule,
     ReservationServiceModule,
+    SubscriptionServiceModule,
   ],
 })
 export class ServicesModule {}

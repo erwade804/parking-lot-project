@@ -1,3 +1,4 @@
+import { SubscriptionControllerModule } from './subscription/subscription.controller.module';
 import { ParkingControllerModule } from './parking/parking.controller.module';
 import { LoginControllerModule } from './login/login.controller.module';
 import { TestControllerModule } from './tests/test.controller.module';
@@ -12,6 +13,7 @@ import { ReservationControllerModule } from './reservation/reservation.controlle
     TestControllerModule,
     ReservationControllerModule,
     ParkingControllerModule,
+    SubscriptionControllerModule,
   ],
 })
 export class ControllersModule {}
