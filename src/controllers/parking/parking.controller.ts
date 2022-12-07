@@ -74,4 +74,11 @@ export class ParkingController {
   ): Promise<ParkingLayout[]> {
     return await this.parkingRepository.find({ where: { level: floor } });
   }
+
+  @Get('floors')
+  async getFloors(): Promise<number> {
+    const parking = (await this.parkingRepository.find()).map((x) => x.level);
+    const most = Math.max(...parking);
+    return most;
+  }
 }

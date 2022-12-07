@@ -3,11 +3,11 @@ import { DataSource } from 'typeorm';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
-  host: 'sql5.freemysqlhosting.net',
-  port: 3306,
-  username: 'sql5520452',
-  password: 'ymwP2d1XPQ',
-  database: 'sql5520452',
+  host: 'db-mysql-nyc1-40864-do-user-11495862-0.b.db.ondigitalocean.com',
+  port: 25060,
+  username: 'doadmin',
+  password: 'AVNS_G1PBt9YIuA0xCFid85c',
+  database: 'defaultdb',
   synchronize: true,
   // uncomment to see sql queries
   // logging: true,
