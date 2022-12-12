@@ -11,7 +11,7 @@ export class Member extends BaseEntity {
   @Column()
   license_number: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   card_id: number;
 
   @Column()

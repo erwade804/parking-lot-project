@@ -12,9 +12,9 @@ export class Login extends BaseEntity {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ default: ' ' })
   authtoken: string;
 
-  @Column({ type: 'int', transformer: dateColumnTransformer })
+  @Column({ type: 'int', transformer: dateColumnTransformer, default: 0 })
   lastUpdated: moment.Moment;
 }

@@ -39,9 +39,6 @@ export class MemberService {
   }
 
   async createMember(body: MemberCreationDto): Promise<Member> {
-    console.log(await this.loginService.userExists(body.username));
-    console.log(await this.userExists(body));
-    console.log(!(await this.loginService.passwordAllowed(body.password)));
     if (
       (await this.loginService.userExists(body.username)) ||
       (await this.userExists(body)) ||
