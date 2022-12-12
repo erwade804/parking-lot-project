@@ -71,6 +71,15 @@ export class ReservationService {
   ): Promise<Reservation> {
     // check if spot is still available
     this.checkValidReservation(start, end);
+    if (
+      !(await this.reservationAllowed(
+        start,
+        end,
+        reservation.parking_spot,
+        reservation,
+      ))
+    )
+      return;
     reservation.start_time = start;
     reservation.end_time = end;
     await this.reservationRepository.update(
@@ -104,6 +113,7 @@ export class ReservationService {
     start: moment.Moment,
     end: moment.Moment,
     parkingSpot: number,
+    originalRes?: Reservation,
   ): Promise<boolean> {
     const reservations = (
       await this.reservationRepository.find({
@@ -119,6 +129,9 @@ export class ReservationService {
         res.end_time === end ||
         (res.start_time.isBefore(start) && res.end_time.isAfter(end))
       ) {
+        if (originalRes && res.book_id === originalRes.book_id) {
+          return false;
+        }
         return true;
       }
       return false;

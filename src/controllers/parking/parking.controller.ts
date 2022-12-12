@@ -11,10 +11,10 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Req,
+  // Req,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { Request } from 'express';
+// import { ApiBearerAuth } from '@nestjs/swagger';
+// import { Request } from 'express';
 import * as moment from 'moment';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -32,15 +32,15 @@ export class ParkingController {
   ) {}
 
   @Post()
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   async park(
-    @Req() request: Request,
+    // @Req() request: Request,
     @Body() body: ParkingSpotDto,
   ): Promise<void> {
     let flag = true;
-    if (request.headers.authorization !== 'Bearer park') {
-      return;
-    }
+    // if (request.headers.authorization !== 'Bearer park') {
+    //   return;
+    // }
 
     const parkingSpot = await this.parkingRepository.findOne({
       where: { parking_id: body.spot },
@@ -68,11 +68,31 @@ export class ParkingController {
     }
   }
 
-  @Get('floor/:floor')
+  @Get('floor/:floor/:start/:stop')
   async getFloorParking(
     @Param('floor', ParseIntPipe) floor: number,
+    @Param('start', ParseIntPipe) start_time: number,
+    @Param('stop', ParseIntPipe) stop_time: number,
   ): Promise<ParkingLayout[]> {
-    return await this.parkingRepository.find({ where: { level: floor } });
+    const parkingSpaces = await this.parkingRepository.find({
+      where: { level: floor },
+    });
+    return (
+      await Promise.all(
+        parkingSpaces.map(async (x) => {
+          if (
+            !(await this.reservationService.reservationAllowed(
+              moment(start_time * 1000),
+              moment(stop_time * 1000),
+              x.parking_id,
+            ))
+          ) {
+            return null;
+          }
+          return x;
+        }),
+      )
+    ).filter((x) => x !== null);
   }
 
   @Get('floors')
