@@ -125,15 +125,19 @@ export class ReservationService {
         res.start_time.isBetween(start, end) ||
         start.isBetween(res.start_time, res.end_time) ||
         end.isBetween(res.start_time, res.end_time) ||
-        res.start_time === start ||
-        res.end_time === end ||
+        res.start_time.diff(start) === 0 ||
+        res.end_time.diff(end) === 0 ||
         (res.start_time.isBefore(start) && res.end_time.isAfter(end))
       ) {
         if (originalRes && res.book_id === originalRes.book_id) {
+          console.log("shouldn't get here");
           return false;
         }
+        console.log('reserved');
         return true;
       }
+      console.log(start, res.start_time);
+      console.log('not reserved');
       return false;
     });
     return reservations.length === 0;
