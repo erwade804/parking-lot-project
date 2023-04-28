@@ -1,44 +1,12 @@
+This project is the backend of a website for a class project at JSU. It used a database that stored all the information that has since been deactivated. This project used TypeORM to connect to the database, add change and delete entries, and easily allow for custom selection of entries when fetching and updating data. 
 
-## Description
+The primary goal of this program was to provide a database connection and data transfer to a frontend web page to simulate a full scale software development cycle. Our project was relativly simple: build a program that would allow users to reserve a parking spot in a garage. We took inspiration from hotels while designing both frontend and backend portions of the code.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Essentially the backend for this project was fairly simple. Create endpoints to connect to a database, fetch data, manipulate data, and return data based on the endpoint and given data from the requet. We used the REST methodology for our endpoints so we could meet industry standards.
 
-## Installation
+Here's a flow of the entire project, both frontend and backend:
+The user first selects a time they would like to reserve on frontend, and frontend sends a request to backend asking what avaliable parking spaces there are on a specific floor. The backend code would then find all reservations for this time duration, including season passes. It would then subtract these reserved spots from the list of all spots on the floor requested and send this data back to frontend. Once the user selects the spot they would like to reserve, they would then confirm on frontend. Once the conformation is sent to backend, we would then reserve their spot and give a http 200 code to frontend letting them know there were no errors. If there were however any errors, for example, the user was not signed in, the spot has been taken since the last fetch to the database, ect. The backend would send a 400 error indicating something went wrong, and would provide details based on what went wrong.
 
-```bash
-$ npm install
-```
+There are also endpoints for reccurring reservations called "season passes" which had multiple tiers based on duration in weeks. This allows users to save money by "bundling" a week's worth or more of reservations at a specific time, or throughout the entire week.
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run dev
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-#unit tests after saving
-$ npm run test:watch
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+Lastly, we created an endpoint for users to see all of their current and/or past reservations. If there were no reservations, we would send an empty list with a 200 http code.
